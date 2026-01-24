@@ -351,8 +351,8 @@ So far, we’ve:
 - Configured firewall rules for AD traffic.
 - Connected a Windows 10 workstation to the domain.
 
-In Part 2, we will:
+In Part 2, we will expore common tasks like:
 
-- Add users and more workstations.
+- Adding users and workstations.
+- Reseting passwords of users.
 - Configure Group Policy settings.
-- Explore PowerShell scripting for AD administration.
