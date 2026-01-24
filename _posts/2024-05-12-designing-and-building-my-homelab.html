@@ -1,0 +1,441 @@
+---
+layout: post
+title: Designing and Building My Homelab Network
+date: 2024-05-12 00:44:12.000000000 -04:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories:
+- Networking
+tags: []
+image: assets/2024/05/small_network_diagram.png
+meta:
+  _edit_last: '1'
+  bloglo_disable_topbar: ''
+  bloglo_disable_header: ''
+  bloglo_disable_page_title: ''
+  bloglo_disable_breadcrumbs: ''
+  bloglo_disable_thumbnail: ''
+  bloglo_disable_footer: ''
+  bloglo_disable_copyright: ''
+  bloglo_disable_blog_card_border: ''
+  _last_editor_used_jetpack: block-editor
+  _thumbnail_id: '251'
+  _encloseme: '1'
+permalink: "/2024/05/12/designing-and-building-my-homelab/"
+---
+<p></p>
+<p>A homelab serves as a dedicated space for individuals to hone their IT and/or information security skills. When I first decided I wanted to pursue a career in IT, I quickly realized that reading theory, watching video demonstrations, and completing Udemy courses would not be enough for me to truly learn. I needed a way to practice what I was learning in a "hands-on" type of environment. Therefore, I made the decision to design and build a homelab that allowed me to experiment with anything from networking, virtualization, Active Directory, web servers, and Information Security tools and techniques.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>This blog post will cover how I designed the network portion of my home lab. I won't be going into detail about any specific technologies that are not related to networking. The diagram below illustrates in detail the network topology of my homelab, serving as a reference for the rest of this blog post.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:image {"id":97,"sizeSlug":"large","linkDestination":"none"} --></p>
+<figure class="wp-block-image size-large"><img src="{{site.baseurl}}/assets/2024/05/network3-1024x915.png" alt="" class="wp-image-97"></figure>
+<p><!-- /wp:image --></p>
+<p><!-- wp:heading {"textAlign":"left"} --></p>
+<h2 class="wp-block-heading has-text-align-left">Hardware</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:jetpack/slideshow {"align":"","ids":[69,66,85,67,117,119,118],"sizeSlug":"full"} --></p>
+<div class="wp-block-jetpack-slideshow" data-effect="slide">
+<div class="wp-block-jetpack-slideshow_container swiper">
+<ul class="wp-block-jetpack-slideshow_swiper-wrapper swiper-wrapper">
+<li class="wp-block-jetpack-slideshow_slide swiper-slide">
+<figure><img alt="" class="wp-block-jetpack-slideshow_image wp-image-69" data-id="69" src="{{site.baseurl}}/assets/2024/05/zimaboard_amazon.jpg"><br />
+<figcaption class="wp-block-jetpack-slideshow_caption gallery-caption">Zimaboard</figcaption>
+</figure>
+</li>
+<li class="wp-block-jetpack-slideshow_slide swiper-slide">
+<figure><img alt="" class="wp-block-jetpack-slideshow_image wp-image-66" data-id="66" src="{{site.baseurl}}/assets/2024/05/cisco_cat_c2960CG.png"><br />
+<figcaption class="wp-block-jetpack-slideshow_caption gallery-caption">Cisco Catalyst Switch</figcaption>
+</figure>
+</li>
+<li class="wp-block-jetpack-slideshow_slide swiper-slide">
+<figure><img alt="" class="wp-block-jetpack-slideshow_image wp-image-85" data-id="85" src="{{site.baseurl}}/assets/2024/05/tplink_switch.png"><br />
+<figcaption class="wp-block-jetpack-slideshow_caption gallery-caption">TP-Link Switch</figcaption>
+</figure>
+</li>
+<li class="wp-block-jetpack-slideshow_slide swiper-slide">
+<figure><img alt="" class="wp-block-jetpack-slideshow_image wp-image-67" data-id="67" src="{{site.baseurl}}/assets/2024/05/dell_precision_5810.png"><br />
+<figcaption class="wp-block-jetpack-slideshow_caption gallery-caption">2x Dell Precision Tower</figcaption>
+</figure>
+</li>
+<li class="wp-block-jetpack-slideshow_slide swiper-slide">
+<figure><img alt="" class="wp-block-jetpack-slideshow_image wp-image-117" data-id="117" src="{{site.baseurl}}/assets/2024/05/elitedesk.png"><br />
+<figcaption class="wp-block-jetpack-slideshow_caption gallery-caption">2x HP Elitedesk</figcaption>
+</figure>
+</li>
+<li class="wp-block-jetpack-slideshow_slide swiper-slide">
+<figure><img alt="" class="wp-block-jetpack-slideshow_image wp-image-119" data-id="119" src="{{site.baseurl}}/assets/2024/05/intel_nic.jpg"><br />
+<figcaption class="wp-block-jetpack-slideshow_caption gallery-caption">Intel Network Card</figcaption>
+</figure>
+</li>
+<li class="wp-block-jetpack-slideshow_slide swiper-slide">
+<figure><img alt="" class="wp-block-jetpack-slideshow_image wp-image-118" data-id="118" src="{{site.baseurl}}/assets/2024/05/4portnic.png"><br />
+<figcaption class="wp-block-jetpack-slideshow_caption gallery-caption">4 Port Network Card</figcaption>
+</figure>
+</li>
+</ul>
+<p><a class="wp-block-jetpack-slideshow_button-prev swiper-button-prev swiper-button-white" role="button"></a><a class="wp-block-jetpack-slideshow_button-next swiper-button-next swiper-button-white" role="button"></a><a aria-label="Pause Slideshow" class="wp-block-jetpack-slideshow_button-pause" role="button"></a>
+<div class="wp-block-jetpack-slideshow_pagination swiper-pagination swiper-pagination-white"></div>
+</div>
+</div>
+<p><!-- /wp:jetpack/slideshow --></p>
+<p><!-- wp:heading --></p>
+<h2 class="wp-block-heading">Topology and Segmentation</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>When I first started building my homelab, all I had for equipment was a used Cisco switch, my personal gaming PC, and a couple of old HP desktops I got for a bargain. With this equipment I designed a simple "flat network" with only one subnet. This means everything in my homelab was hosted within the same "LAN". Although it was a good start, I wanted my homelab to feel a little bit more like a real corporate network. Therefore, I thought the next step was to plan out how to segment my network into distinct administrative subnets.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>After a lot of googling in order to figure out what the average "corporate topology" might look like, I ended up settling on four subnets to divide my network:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list --></p>
+<ul class="wp-block-list">
+<!-- wp:list-item --></p>
+<li>The "<strong>Admin LAN</strong>" at - 10.1.1.0/24<!-- wp:list -->
+<ul class="wp-block-list">
+<!-- wp:list-item --></p>
+<li>This subnet contains the "internal services" of the network, such as a Domain Controller for Active Directory and my TrueNAS instance, where I store my movies, shows, and audiobooks.</li>
+<p><!-- /wp:list-item --></p>
+<p><!-- wp:list-item --></p>
+<li>The interfaces of my network devices (router and switch) are also assigned to this subnet.</li>
+<p><!-- /wp:list-item --></p>
+<p><!-- wp:list-item --></p>
+<li>My personal workstation also sits on this subnet, so that I can access everything an "admin" should access.</li>
+<p><!-- /wp:list-item --></p>
+<p><!-- wp:list-item --></p>
+<li><span style="text-decoration: underline;">Proxmox hypervisor runs VMs for both "Admin LAN" and "User LAN" by utilizing a trunk port, but the hypervisor itself is managed on Admin.</span></li>
+<p><!-- /wp:list-item -->
+</ul>
+<p><!-- /wp:list -->
+</li>
+<p><!-- /wp:list-item --></p>
+<p><!-- wp:list-item --></p>
+<li>The "<strong>User LAN</strong>" at - 10.1.2.0/24<!-- wp:list -->
+<ul class="wp-block-list">
+<!-- wp:list-item --></p>
+<li>Practicing with Active Directory means that I also need a few fake "user workstations". These are connected on this subnet.</li>
+<p><!-- /wp:list-item -->
+</ul>
+<p><!-- /wp:list -->
+</li>
+<p><!-- /wp:list-item --></p>
+<p><!-- wp:list-item --></p>
+<li>The "<strong>DMZ</strong>" at - 10.1.3.0/24<!-- wp:list -->
+<ul class="wp-block-list">
+<!-- wp:list-item --></p>
+<li>Also stands for "Demilitarized Zone".<!-- wp:list -->
+<ul class="wp-block-list">
+<!-- wp:list-item --></p>
+<li>Real networks host services that have to interact with the public internet, which is an "untrusted" network. These services are usually put into what's called a DMZ.</li>
+<p><!-- /wp:list-item --></p>
+<p><!-- wp:list-item --></p>
+<li>A DMZ is just a network segment that sits between an organization's "trusted" network and an external "untrusted" network. It is also configured with stricter firewall rules between it and the internal network segments so that those segments remain protected and isolated from a compromise.</li>
+<p><!-- /wp:list-item -->
+</ul>
+<p><!-- /wp:list -->
+</li>
+<p><!-- /wp:list-item --></p>
+<p><!-- wp:list-item --></p>
+<li>In my homelab, this DMZ isn't actually interacting with the real internet. Rather it faces a "pretend" untrusted network that is actually just be the SOHO wireless router that my ISP provides. (This can be better understood from the network diagram above).</li>
+<p><!-- /wp:list-item --></p>
+<p><!-- wp:list-item --></p>
+<li>This subnet is currently hosting my media servers (Jellyfin and Audiobookshelf). I also use it to spin up "vulnerable" web services to practice my penetration testing skills or simulate an "External Penetration Testing" assessment.</li>
+<p><!-- /wp:list-item --></p>
+<p><!-- wp:list-item --></p>
+<li>VMs are running on a Proxmox hypervisor.</li>
+<p><!-- /wp:list-item -->
+</ul>
+<p><!-- /wp:list -->
+</li>
+<p><!-- /wp:list-item --></p>
+<p><!-- wp:list-item --></p>
+<li>The "<strong>SOC</strong>" at - 10.1.4.0/24<!-- wp:list -->
+<ul class="wp-block-list">
+<!-- wp:list-item --></p>
+<li>"SOC" stands for Security Operations Center. In the real world, a SOC is a unit within a company or organization that handles all of the network's cybersecurity needs. SOCs monitor the network and try to prevent, detect, and respond to security incidents.</li>
+<p><!-- /wp:list-item --></p>
+<p><!-- wp:list-item --></p>
+<li>This subnet is where I practice my cybersecurity skills. I currently have set up several tools running inside of an ESXi 7.0 hypervisor such as a SIEM (Security Onion), a Malware Sandbox, a Forensics Workstations, and Threat Intelligence Server.</li>
+<p><!-- /wp:list-item -->
+</ul>
+<p><!-- /wp:list -->
+</li>
+<p><!-- /wp:list-item -->
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:heading --></p>
+<h2 class="wp-block-heading">Configuring Routing Interfaces on Pfsense</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p><a href="https://www.pfsense.org/getting-started/">Pfsense</a> is an all-in-one router/firewall operating system that can be installed for free on almost any x64 computer. Other than being just a router and firewall, it can perform countless other network roles such as DHCP, DNS, and can even work as a VPN service. Most importantly, Pfsense is free and open-source!</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>In my case, I've installed Pfsense on a neat piece of hardware called a <a href="https://www.zimaspace.com/products/single-board-server?utm_source=homepage&amp;utm_medium=banner">Zimaboard</a>. Similar to something like a Raspberri Pi, a Zimaboard is a low-powered, single board computer with lots of "expandibility" options built in. Unlike a Raspberri Pi, Zimaboards run on a x64 CPU rather than ARM. This is a good thing because the open-source version of Pfsense only works on x64 processors.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>One of the coolest expandibility features of the Zimaboard is the PCIe slot. I've used this to attach 4 port network card to it. Now I'm able to utilize six interfaces instead of just the two already built in.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:image {"id":98,"sizeSlug":"large","linkDestination":"none"} --></p>
+<figure class="wp-block-image size-large"><img src="{{site.baseurl}}/assets/2024/05/zimaboard-1024x864.jpg" alt="" class="wp-image-98"></figure>
+<p><!-- /wp:image --></p>
+<p><!-- wp:paragraph --></p>
+<p>The first time I installed Pfsense was a bit of a task. I had to first burn the ISO onto a USB drive, install the operating system onto the Zimaboard, go through the configuration wizard, set up the DNS resolver, set up one interface to connect to my SOHO ISP router, and then assign the interfaces to the subnets that I came up with earlier. In the end, I ended up with a pretty cool and robust routing/firewall solution.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:image {"id":101,"width":"892px","height":"auto","sizeSlug":"large","linkDestination":"none"} --></p>
+<figure class="wp-block-image size-large is-resized"><img src="{{site.baseurl}}/assets/2024/05/pfsense_dash-1024x844.png" alt="" class="wp-image-101" style="width:892px;height:auto"><br />
+<figcaption class="wp-element-caption">Pfsense Dashboard</figcaption>
+</figure>
+<p><!-- /wp:image --></p>
+<p><!-- wp:heading --></p>
+<h2 class="wp-block-heading">Configuring VLANS on a Cisco Switch</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>Of course, layer 3 routing cannot work without layer 2 switching. A router's job is to de-encapsulate Ethernet frames, and then forward packets from subnet/LAN (local area network) to the next <span style="text-decoration: underline;">correct</span> subnet based on the destination IP address and its routing table. Once a packet is re-encapsulated into an Ethernet frame again, the router's job is finished, and a switch takes over. So, I needed a switching mechanism for each subnet I've created. The only problem was that I had four subnets but only two switches. That's where VLANs come in handy.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>VLANs, or Virtual Local Area Networks, are a way of segmenting LANs into smaller "broadcast domains". </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list --></p>
+<ul class="wp-block-list">
+<!-- wp:list-item --></p>
+<li>If you're unfamiliar with what a broadcast domain is, it's basically the extent of a network where an endpoint could receive a broadcast message.</li>
+<p><!-- /wp:list-item -->
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:paragraph --></p>
+<p>Using my managed switch, I created 3 VLANs (10, 20, and 30) for my 'Admin', 'User', and 'DMZ' subnets, but not for the SOC subnet. Instead, I connected to SOC to my unmanaged TP-Link switch which then connects to Pfsense. That way, there is more of a physical separation for the SOC.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>To configure a switch to do VLANs:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list {"ordered":true} --></p>
+<ol class="wp-block-list">
+<!-- wp:list-item --></p>
+<li>First you have to assign the switches physical ports to a VLAN.</li>
+<p><!-- /wp:list-item --></p>
+<p><!-- wp:list-item --></p>
+<li>Then you have to configure at least one trunk port connecting to a router so that the VLANs can be routed to each other without wasting port interfaces. (Otherwise, I would have needed three different interfaces connecting to my Pfsense router).</li>
+<p><!-- /wp:list-item -->
+</ol>
+<p><!-- /wp:list --></p>
+<p><!-- wp:paragraph --></p>
+<p>Here are the commands for assigning a VLAN on a port:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list {"ordered":true} --></p>
+<ol class="wp-block-list">
+<!-- wp:list-item --></p>
+<li>Enter enable mode then global configuration mode:<!-- wp:list -->
+<ul class="wp-block-list">
+<!-- wp:list-item --></p>
+<li><strong>enable</strong></li>
+<p><!-- /wp:list-item --></p>
+<p><!-- wp:list-item --></p>
+<li><strong>configure terminal</strong></li>
+<p><!-- /wp:list-item -->
+</ul>
+<p><!-- /wp:list -->
+</li>
+<p><!-- /wp:list-item --></p>
+<p><!-- wp:list-item --></p>
+<li>Enter interface configuration mode for the interface/s you want to configure:<!-- wp:list -->
+<ul class="wp-block-list">
+<!-- wp:list-item --></p>
+<li><strong>interface {interface name or range}</strong></li>
+<p><!-- /wp:list-item -->
+</ul>
+<p><!-- /wp:list -->
+</li>
+<p><!-- /wp:list-item --></p>
+<p><!-- wp:list-item --></p>
+<li>Assign as 'access mode':<!-- wp:list -->
+<ul class="wp-block-list">
+<!-- wp:list-item --></p>
+<li><strong>switchport mode access</strong></li>
+<p><!-- /wp:list-item -->
+</ul>
+<p><!-- /wp:list -->
+</li>
+<p><!-- /wp:list-item --></p>
+<p><!-- wp:list-item --></p>
+<li>Assign the VLAN ID:<!-- wp:list -->
+<ul class="wp-block-list">
+<!-- wp:list-item --></p>
+<li><strong>switchport access vlan {VLAN ID}</strong></li>
+<p><!-- /wp:list-item -->
+</ul>
+<p><!-- /wp:list -->
+</li>
+<p><!-- /wp:list-item --></p>
+<p><!-- wp:list-item --></p>
+<li>Repeat for all interfaces that need editing</li>
+<p><!-- /wp:list-item --></p>
+<p><!-- wp:list-item --></p>
+<li>Exit interface configuration mode and verify configuration.<!-- wp:list -->
+<ul class="wp-block-list">
+<!-- wp:list-item --></p>
+<li><strong>show vlan brief</strong></li>
+<p><!-- /wp:list-item -->
+</ul>
+<p><!-- /wp:list -->
+</li>
+<p><!-- /wp:list-item -->
+</ol>
+<p><!-- /wp:list --></p>
+<p><!-- wp:image {"id":86,"width":"838px","height":"auto","sizeSlug":"full","linkDestination":"none"} --></p>
+<figure class="wp-block-image size-full is-resized"><img src="{{site.baseurl}}/assets/2024/05/vlan_brief.png" alt="" class="wp-image-86" style="width:838px;height:auto"><br />
+<figcaption class="wp-element-caption">My VLAN Configuration</figcaption>
+</figure>
+<p><!-- /wp:image --></p>
+<p><!-- wp:paragraph --></p>
+<p>Next, I configured two switch ports to be trunk ports. One was needed to connect to Pfsense. The other was needed to connect to one of my hypervisors because it hosted two VLANS, so it needed to be "VLAN aware".</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Cisco commands to configure a trunk port:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list {"ordered":true} --></p>
+<ol class="wp-block-list">
+<!-- wp:list-item --></p>
+<li>Enter enable mode then global configuration mode:<!-- wp:list -->
+<ul class="wp-block-list">
+<!-- wp:list-item --></p>
+<li><strong>enable</strong></li>
+<p><!-- /wp:list-item --></p>
+<p><!-- wp:list-item --></p>
+<li><strong>configure terminal</strong></li>
+<p><!-- /wp:list-item -->
+</ul>
+<p><!-- /wp:list -->
+</li>
+<p><!-- /wp:list-item --></p>
+<p><!-- wp:list-item --></p>
+<li>Enter interface configuration mode for the interface/s you want to configure:<!-- wp:list -->
+<ul class="wp-block-list">
+<!-- wp:list-item --></p>
+<li><strong>interface {interface name}</strong></li>
+<p><!-- /wp:list-item -->
+</ul>
+<p><!-- /wp:list -->
+</li>
+<p><!-- /wp:list-item --></p>
+<p><!-- wp:list-item --></p>
+<li>Set it to trunking mode:<!-- wp:list -->
+<ul class="wp-block-list">
+<!-- wp:list-item --></p>
+<li><strong>switchport mode trunk</strong></li>
+<p><!-- /wp:list-item -->
+</ul>
+<p><!-- /wp:list -->
+</li>
+<p><!-- /wp:list-item --></p>
+<p><!-- wp:list-item --></p>
+<li>On some switches, you may have to choose a trunking protocol:<!-- wp:list -->
+<ul class="wp-block-list">
+<!-- wp:list-item --></p>
+<li><strong>switchport trunk encapsulation {dot1q or isl}</strong></li>
+<p><!-- /wp:list-item -->
+</ul>
+<p><!-- /wp:list -->
+</li>
+<p><!-- /wp:list-item --></p>
+<p><!-- wp:list-item --></p>
+<li>Configure the list of allowed VLANs<!-- wp:list -->
+<ul class="wp-block-list">
+<!-- wp:list-item --></p>
+<li><strong>switchport trunk allowed vlan {list of vlans}</strong></li>
+<p><!-- /wp:list-item -->
+</ul>
+<p><!-- /wp:list -->
+</li>
+<p><!-- /wp:list-item --></p>
+<p><!-- wp:list-item --></p>
+<li>Exit interface configuration mode and verify configuration.<!-- wp:list -->
+<ul class="wp-block-list">
+<!-- wp:list-item --></p>
+<li><strong>show interfaces trunk</strong></li>
+<p><!-- /wp:list-item -->
+</ul>
+<p><!-- /wp:list -->
+</li>
+<p><!-- /wp:list-item -->
+</ol>
+<p><!-- /wp:list --></p>
+<p><!-- wp:image {"id":87,"width":"837px","height":"auto","sizeSlug":"full","linkDestination":"none"} --></p>
+<figure class="wp-block-image size-full is-resized"><img src="{{site.baseurl}}/assets/2024/05/show_trunks.png" alt="" class="wp-image-87" style="width:837px;height:auto"><br />
+<figcaption class="wp-element-caption">Trunk Configuration</figcaption>
+</figure>
+<p><!-- /wp:image --></p>
+<p><!-- wp:paragraph --></p>
+<p>Trunk ports need to be configured on both ends, or two devices for each trunk. In my case, I configured trunking from the Cisco switch to Pfsense, and also from the Cisco switch to one of the Proxmox hypervisors. Making non-switch devices "VLAN aware" is done using a mechanism called "router on a stick". This basically takes an interface on a routing device and divides it logically into "sub-interfaces". For example, igb0 becomes "igb0.10" for VLAN 10, "igb0.20" for VLAN 20, and "igb0.30" for vlan 30. The screenshots below show those configurations:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:image {"id":90,"width":"869px","height":"auto","sizeSlug":"large","linkDestination":"none"} --></p>
+<figure class="wp-block-image size-large is-resized"><img src="{{site.baseurl}}/assets/2024/05/pfsense_vlans-1024x345.png" alt="" class="wp-image-90" style="width:869px;height:auto"><br />
+<figcaption class="wp-element-caption">Pfsense VLAN Config</figcaption>
+</figure>
+<p><!-- /wp:image --></p>
+<p><!-- wp:image {"id":91,"width":"878px","height":"auto","sizeSlug":"large","linkDestination":"none"} --></p>
+<figure class="wp-block-image size-large is-resized"><img src="{{site.baseurl}}/assets/2024/05/pfsense_subinterfaces-1024x354.png" alt="" class="wp-image-91" style="width:878px;height:auto"><br />
+<figcaption class="wp-element-caption">Pfsense Interfaces and Sub-interfaces</figcaption>
+</figure>
+<p><!-- /wp:image --></p>
+<p><!-- wp:image {"id":113,"width":"868px","height":"auto","sizeSlug":"full","linkDestination":"none"} --></p>
+<figure class="wp-block-image size-full is-resized"><img src="{{site.baseurl}}/assets/2024/05/proxmox_setup.png" alt="" class="wp-image-113" style="width:868px;height:auto"><br />
+<figcaption class="wp-element-caption">Proxmox Interfaces and Sub-interfaces</figcaption>
+</figure>
+<p><!-- /wp:image --></p>
+<p><!-- wp:heading --></p>
+<h2 class="wp-block-heading">Configuring Firewall Rules on Pfsense</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>At the most basic level, network firewalls are devices that filter traffic at the transport layer. There are two types of firewalls: stateless and stateful. Stateless firewalls examine traffic without considering the context or history of the network connection. Stateful firewalls keep track of active connections and consider and can allow or deny traffic based on packet history. They make an allow or deny decision based on context, rather than strictly following rules. Pfsense is a stateful firewall at the very least.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>On Pfsense, and many other firewall software, rules work by "first match" bases and explicit deny. This means that when a connection is initiated, the firewall checks every rule sequentially, from top to bottom, to see if the connection matches any of the rules. The first rule that matches gets applied to the connection and either an allow, deny, or filter action is taken. If none of the rules match, the connection gets denied by default (explicit deny).</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Rules are organized on Pfsense by giving each interface its own set of rules. The screenshots below show how I have my rules set up. The WAN rules allow a lot of port forwarding, while the SOC rules have stricter security.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:jetpack/slideshow {"ids":[108,107],"sizeSlug":"large"} --></p>
+<div class="wp-block-jetpack-slideshow aligncenter" data-effect="slide">
+<div class="wp-block-jetpack-slideshow_container swiper">
+<ul class="wp-block-jetpack-slideshow_swiper-wrapper swiper-wrapper">
+<li class="wp-block-jetpack-slideshow_slide swiper-slide">
+<figure><img alt="" class="wp-block-jetpack-slideshow_image wp-image-108" data-id="108" src="{{site.baseurl}}/assets/2024/05/wan_rules-1-1024x444.png"><br />
+<figcaption class="wp-block-jetpack-slideshow_caption gallery-caption">WAN Rules</figcaption>
+</figure>
+</li>
+<li class="wp-block-jetpack-slideshow_slide swiper-slide">
+<figure><img alt="" class="wp-block-jetpack-slideshow_image wp-image-107" data-id="107" src="{{site.baseurl}}/assets/2024/05/soc_rules-1024x481.png"><br />
+<figcaption class="wp-block-jetpack-slideshow_caption gallery-caption">SOC Rules</figcaption>
+</figure>
+</li>
+</ul>
+<p><a class="wp-block-jetpack-slideshow_button-prev swiper-button-prev swiper-button-white" role="button"></a><a class="wp-block-jetpack-slideshow_button-next swiper-button-next swiper-button-white" role="button"></a><a aria-label="Pause Slideshow" class="wp-block-jetpack-slideshow_button-pause" role="button"></a>
+<div class="wp-block-jetpack-slideshow_pagination swiper-pagination swiper-pagination-white"></div>
+</div>
+</div>
+<p><!-- /wp:jetpack/slideshow --></p>
+<p><!-- wp:heading --></p>
+<h2 class="wp-block-heading">SPAN Port</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>SPAN ports, also called 'port mirrors', allow the mirroring of traffic from a switch to another device using a designated port on the switch. In my homelab, I configured one of my switch's ports to mirror all ingress traffic on VLANs 10, 20, and 30 via a secondary network card on my ESXi hypervisor in the "SOC" subnet. From there, it gets forwarded to a SIEM/IDS virtual machine where it gets analyzed. Mirroring traffic is an essential part of every Security Operations Center.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:image {"id":110,"sizeSlug":"full","linkDestination":"none","align":"center"} --></p>
+<figure class="wp-block-image aligncenter size-full"><img src="{{site.baseurl}}/assets/2024/05/port_mirror.png" alt="" class="wp-image-110"><br />
+<figcaption class="wp-element-caption">showing monitor sessions</figcaption>
+</figure>
+<p><!-- /wp:image --></p>
+<p><!-- wp:heading --></p>
+<h2 class="wp-block-heading">Future Use Cases</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>Well, that's the gist of my homelab topography for now. Over the course of a year and a half, I've been able to set up a decent media server that's able to transcode movies and TV shows, while also storing my media on a network-attached storage (NAS). I have also started to learn a lot about Active Directory services and file sharing technologies like SMB. In the future, I hope to keep building my SOC segment since information security is a subject that really interests me. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>That's it for now, thanks for reading!</p>
+<p><!-- /wp:paragraph --><br />
+</body></html></p>
