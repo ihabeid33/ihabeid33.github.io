@@ -10,20 +10,7 @@ status: publish
 categories:
 - Active Directory
 tags: []
-image: assets/2024/06/ad_icon.webp
-meta:
-  _last_editor_used_jetpack: block-editor
-  _edit_last: '1'
-  bloglo_disable_topbar: ''
-  bloglo_disable_header: ''
-  bloglo_disable_page_title: ''
-  bloglo_disable_breadcrumbs: ''
-  bloglo_disable_thumbnail: ''
-  bloglo_disable_footer: ''
-  bloglo_disable_copyright: ''
-  bloglo_disable_blog_card_border: ''
-  _thumbnail_id: '240'
-permalink: "/2024/06/26/active-directory-lab-part-1/"
+image: assets/2024/09/ad_cover.png
 ---
 ## Why Active Directory?
 

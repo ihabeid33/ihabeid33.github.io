@@ -11,7 +11,7 @@ categories:
 - Storage
 tags: []
 image: 
-  path: assets/2024/10/truenas_logo.png
+  path: assets/2024/10/truenas_cover.webp
   width: 1200
   height: 630
 ---

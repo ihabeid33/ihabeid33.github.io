@@ -11,7 +11,7 @@ categories:
 - Active Directory
 tags: []
 image: 
-  path: assets/2024/06/ad_icon.webp
+  path: assets/2024/09/ad_cover.png
   width: 1200
   height: 630
 ---
