@@ -21,7 +21,7 @@ image:
 
 The way organizational units are set up can look different from one network to the next. From what I have read, OU creation should be based on how group policy objects need to be assigned to specific AD objects. For example, maybe the OU labeled "HR Department" needs a group policy object made specifically for delegating resources that only "HR" needs to access. It's also best practice to try to keep your OU structure as simple as possible. Complex structures may be difficult to reverse or change in the future.
 
-In my homelab, I make up a fake scenario where my organization needs an organizational unit for its main office branch. So I created an OU named 'Main Branch. To do this, I opened the 'Active Directory Users and Computers' tool.
+In my homelab, I made up a fake scenario where my organization needs an organizational unit for its main office branch. So I created an OU named 'Main Branch. To do this, I opened the 'Active Directory Users and Computers' tool.
 
 *Server manager > 'Tools' tab > 'Active Directory Users and Computers'.*
 
